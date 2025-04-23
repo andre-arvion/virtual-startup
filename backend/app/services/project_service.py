@@ -6,7 +6,13 @@ from typing import List, Optional
 class ProjectService:
     @staticmethod
     def create_project(db: Session, project: ProjectCreate, owner_id: int) -> Project:
-        db_project = Project(**project.model_dump(), owner_id=owner_id)
+        db_project = Project(
+            **project.model_dump(),
+            owner_id=owner_id,
+            phases={"frontend": 0, "backend": 0, "integration": 0},
+            personas=[],
+            assets=[]
+        )
         db.add(db_project)
         db.commit()
         db.refresh(db_project)
@@ -31,19 +37,54 @@ class ProjectService:
     @staticmethod
     def update_project(
         db: Session, project_id: int, project_update: ProjectUpdate
-    ) -> Project:
+    ) -> Optional[Project]:
         db_project = ProjectService.get_project(db, project_id)
-        update_data = project_update.model_dump(exclude_unset=True)
-        
-        for field, value in update_data.items():
-            setattr(db_project, field, value)
-        
-        db.commit()
-        db.refresh(db_project)
+        if db_project:
+            update_data = project_update.model_dump(exclude_unset=True)
+            for field, value in update_data.items():
+                setattr(db_project, field, value)
+            db.commit()
+            db.refresh(db_project)
         return db_project
 
     @staticmethod
-    def delete_project(db: Session, project_id: int) -> None:
+    def delete_project(db: Session, project_id: int) -> bool:
         db_project = ProjectService.get_project(db, project_id)
-        db.delete(db_project)
-        db.commit() 
+        if db_project:
+            db.delete(db_project)
+            db.commit()
+            return True
+        return False
+
+    @staticmethod
+    def update_project_phases(
+        db: Session, project_id: int, phases: dict
+    ) -> Optional[Project]:
+        db_project = ProjectService.get_project(db, project_id)
+        if db_project:
+            db_project.phases = phases
+            db.commit()
+            db.refresh(db_project)
+        return db_project
+
+    @staticmethod
+    def update_project_personas(
+        db: Session, project_id: int, personas: list
+    ) -> Optional[Project]:
+        db_project = ProjectService.get_project(db, project_id)
+        if db_project:
+            db_project.personas = personas
+            db.commit()
+            db.refresh(db_project)
+        return db_project
+
+    @staticmethod
+    def update_project_assets(
+        db: Session, project_id: int, assets: list
+    ) -> Optional[Project]:
+        db_project = ProjectService.get_project(db, project_id)
+        if db_project:
+            db_project.assets = assets
+            db.commit()
+            db.refresh(db_project)
+        return db_project 
