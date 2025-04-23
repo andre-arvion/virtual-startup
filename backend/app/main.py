@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth_router, users_router, projects_router
+from app.api import auth_router, users_router, projects_router, tasks_router
 
 app = FastAPI(
     title="Virtual Startup Platform API",
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/api", tags=["Authentication"])
 app.include_router(users_router, prefix="/api/users", tags=["Users"])
 app.include_router(projects_router, prefix="/api/projects", tags=["Projects"])
+app.include_router(tasks_router, prefix="/api/tasks", tags=["Tasks"])
 
 @app.get("/")
 async def root():

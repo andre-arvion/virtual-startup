@@ -1,4 +1,5 @@
-from . import project_service
-from . import user_service
+from .project_service import ProjectService
+from .user_service import UserService
+from .task_service import TaskService
 
-__all__ = ['project_service', 'user_service'] 
+__all__ = ['ProjectService', 'UserService', 'TaskService'] 
