@@ -1,61 +1,160 @@
-# Virtual Startup Platform Backend
+# Virtual Startup Platform
 
-This is the backend service for the Virtual Startup Platform, built with FastAPI and SQLAlchemy.
+A comprehensive platform for managing virtual startup projects, featuring project management, task tracking, and collaboration tools.
 
-## Setup
+## Overview
 
-1. Create and activate virtual environment:
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-```
+The Virtual Startup Platform is a full-stack application that helps users manage virtual startup projects efficiently. It provides tools for project management, task tracking, activity monitoring, and team collaboration.
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## Features
 
-3. Set up environment variables:
-- Copy `.env.example` to `.env`
-- Update the values in `.env` as needed
+- **User Management**
+  - User registration and authentication
+  - JWT-based authentication
+  - User profiles and permissions
 
-4. Initialize the database:
-```bash
-alembic upgrade head
-```
+- **Project Management**
+  - Create and manage projects
+  - Project templates for quick setup
+  - Project phases tracking
+  - Custom project personas
+  - Asset management
 
-5. Run the development server:
-```bash
-# Run on port 8001 to avoid conflict with frontend
-uvicorn app.main:app --reload --port 8001
-```
+- **Task Management**
+  - Create and assign tasks
+  - Task status tracking
+  - Priority levels
+  - Due date management
 
-The API will be available at `http://localhost:8001`
+- **Activity Tracking**
+  - Real-time activity feeds
+  - Project-specific activity logs
+  - User activity history
 
-## API Documentation
+- **Search Functionality**
+  - Global search across projects and tasks
+  - Filter by type (project/task)
+  - Advanced search options
 
-Once the server is running, you can access:
-- Interactive API documentation: `http://localhost:8001/docs`
-- Alternative API documentation: `http://localhost:8001/redoc`
+## Tech Stack
+
+### Backend
+- FastAPI (Python web framework)
+- SQLAlchemy (ORM)
+- Alembic (Database migrations)
+- SQLite (Database)
+- JWT Authentication
+- Pydantic (Data validation)
+
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- React Router
+- Zustand (State management)
 
 ## Project Structure
 
 ```
-backend/
-├── app/
-│   ├── api/           # API endpoints
-│   ├── models/        # SQLAlchemy models
-│   ├── schemas/       # Pydantic schemas
-│   ├── services/      # Business logic
-│   └── utils/         # Utility functions
-├── tests/             # Test files
-├── alembic/           # Database migrations
-├── .env              # Environment variables
-└── requirements.txt   # Project dependencies
+virtual-startup-platform/
+├── backend/                 # FastAPI backend
+│   ├── app/
+│   │   ├── api/            # API endpoints
+│   │   ├── core/           # Core functionality
+│   │   ├── models/         # Database models
+│   │   ├── schemas/        # Pydantic schemas
+│   │   └── services/       # Business logic
+│   ├── alembic/            # Database migrations
+│   └── tests/              # Backend tests
+└── frontend/               # React frontend
+    ├── src/
+    │   ├── components/     # React components
+    │   ├── pages/         # Page components
+    │   ├── store/         # State management
+    │   └── lib/           # Utilities
+    └── public/            # Static assets
 ```
 
-## Development
+## Getting Started
 
-- Run tests: `pytest`
-- Create new migration: `alembic revision --autogenerate -m "description"`
-- Apply migrations: `alembic upgrade head` 
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
+- SQLite
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+2. Create and activate a virtual environment:
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+5. Run database migrations:
+```bash
+alembic upgrade head
+```
+
+6. Start the backend server:
+```bash
+uvicorn app.main:app --reload --port 8001
+```
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The application will be available at:
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:8001
+- API Documentation: http://localhost:8001/docs
+
+## API Documentation
+
+The API documentation is available at `/docs` when running the backend server. It provides detailed information about all available endpoints, request/response schemas, and authentication requirements.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
