@@ -1,0 +1,50 @@
+
+{
+  "projects": [
+    {
+      "id": "proj-123456",
+      "name": "EcoTrack",
+      "description": "A sustainability tracking platform for businesses to monitor and reduce their carbon footprint",
+      "type": "SaaS",
+      "status": "In Progress",
+      "created_date": "2025-03-15T14:32:00Z",
+      "updated_date": "2025-04-20T09:15:00Z"
+    },
+    {
+      "id": "proj-234567",
+      "name": "MedConnect",
+      "description": "Telehealth platform connecting patients with healthcare providers for virtual consultations",
+      "type": "Healthcare",
+      "status": "Planning",
+      "created_date": "2025-04-01T10:15:00Z",
+      "updated_date": "2025-04-18T16:45:00Z"
+    },
+    {
+      "id": "proj-345678",
+      "name": "FinPal",
+      "description": "Personal finance management app with AI-driven insights and recommendations",
+      "type": "Fintech",
+      "status": "Completed",
+      "created_date": "2025-02-10T09:20:00Z",
+      "updated_date": "2025-04-15T14:30:00Z"
+    },
+    {
+      "id": "proj-456789",
+      "name": "EduLearn",
+      "description": "Adaptive learning platform for personalized education experiences",
+      "type": "EdTech",
+      "status": "In Progress",
+      "created_date": "2025-03-25T11:45:00Z",
+      "updated_date": "2025-04-22T13:10:00Z"
+    },
+    {
+      "id": "proj-567890",
+      "name": "SupplyChainX",
+      "description": "Blockchain-based supply chain visibility and management platform",
+      "type": "Enterprise",
+      "status": "Planning",
+      "created_date": "2025-04-10T15:30:00Z",
+      "updated_date": "2025-04-21T10:20:00Z"
+    }
+  ]
+}

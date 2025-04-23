@@ -1,0 +1,70 @@
+
+{
+  "activities": [
+    {
+      "id": "act-1",
+      "timestamp": "2025-04-22T15:30:00Z",
+      "type": "persona_complete",
+      "persona": "vtechwriter",
+      "text": "vTech Writer completed technical documentation"
+    },
+    {
+      "id": "act-2",
+      "timestamp": "2025-04-21T12:15:00Z",
+      "type": "persona_complete",
+      "persona": "vciso",
+      "text": "vCISO completed security architecture"
+    },
+    {
+      "id": "act-3",
+      "timestamp": "2025-04-20T10:45:00Z",
+      "type": "persona_complete",
+      "persona": "vcto",
+      "text": "vCTO completed technical architecture"
+    },
+    {
+      "id": "act-4",
+      "timestamp": "2025-04-19T16:20:00Z",
+      "type": "persona_complete",
+      "persona": "vux",
+      "text": "vUX completed user experience design"
+    },
+    {
+      "id": "act-5",
+      "timestamp": "2025-04-18T11:00:00Z",
+      "type": "persona_complete",
+      "persona": "vpm",
+      "text": "vPM completed product requirements document"
+    },
+    {
+      "id": "act-6",
+      "timestamp": "2025-04-17T09:30:00Z",
+      "type": "project_created",
+      "text": "Project EcoTrack created"
+    },
+    {
+      "id": "act-7",
+      "timestamp": "2025-04-19T14:30:00Z",
+      "type": "asset_linked",
+      "text": "Figma Design linked to project"
+    },
+    {
+      "id": "act-8",
+      "timestamp": "2025-04-20T16:45:00Z",
+      "type": "asset_linked",
+      "text": "GitHub Repository linked to project"
+    },
+    {
+      "id": "act-9",
+      "timestamp": "2025-04-21T13:20:00Z",
+      "type": "export_created",
+      "text": "Project documentation exported as Markdown"
+    },
+    {
+      "id": "act-10",
+      "timestamp": "2025-04-22T10:15:00Z",
+      "type": "project_updated",
+      "text": "Project description updated"
+    }
+  ]
+}

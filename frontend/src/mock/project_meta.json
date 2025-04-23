@@ -1,0 +1,66 @@
+
+{
+  "id": "proj-123456",
+  "name": "EcoTrack",
+  "description": "A sustainability tracking platform for businesses to monitor and reduce their carbon footprint",
+  "type": "SaaS",
+  "status": "In Progress",
+  "created_date": "2025-03-15T14:32:00Z",
+  "updated_date": "2025-04-20T09:15:00Z",
+  "phases": {
+    "frontend": 65,
+    "backend": 40,
+    "integration": 20
+  },
+  "personas": [
+    {
+      "id": "vpm",
+      "name": "vPM",
+      "fullName": "Virtual Product Manager",
+      "completed": true,
+      "icon": "layout-dashboard"
+    },
+    {
+      "id": "vux",
+      "name": "vUX",
+      "fullName": "Virtual UX Designer",
+      "completed": true,
+      "icon": "image"
+    },
+    {
+      "id": "vcto",
+      "name": "vCTO",
+      "fullName": "Virtual CTO",
+      "completed": false,
+      "icon": "code"
+    },
+    {
+      "id": "vciso",
+      "name": "vCISO",
+      "fullName": "Virtual CISO",
+      "completed": false, 
+      "icon": "shield"
+    },
+    {
+      "id": "vtechwriter",
+      "name": "vTech Writer",
+      "fullName": "Virtual Tech Writer",
+      "completed": false,
+      "icon": "file-text"
+    }
+  ],
+  "assets": [
+    {
+      "name": "Figma Design",
+      "url": "https://figma.com/file/example",
+      "type": "figma",
+      "icon": "image"
+    },
+    {
+      "name": "GitHub Repository",
+      "url": "https://github.com/example/ecotrack",
+      "type": "github",
+      "icon": "github"
+    }
+  ]
+}
