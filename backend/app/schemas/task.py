@@ -1,7 +1,17 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
-from app.models.task import TaskStatus, TaskPriority
+from enum import Enum
+
+class TaskStatus(str, Enum):
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
+
+class TaskPriority(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 class TaskBase(BaseModel):
     title: str
@@ -14,13 +24,9 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     project_id: int
 
-class TaskUpdate(BaseModel):
+class TaskUpdate(TaskBase):
     title: Optional[str] = None
-    description: Optional[str] = None
-    status: Optional[TaskStatus] = None
-    priority: Optional[TaskPriority] = None
-    due_date: Optional[datetime] = None
-    assignee_id: Optional[int] = None
+    project_id: Optional[int] = None
 
 class Task(TaskBase):
     id: int
