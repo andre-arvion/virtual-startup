@@ -9,23 +9,45 @@ from app.core.error_handlers import internal_exception_handler, sqlalchemy_excep
 from sqlalchemy.exc import SQLAlchemyError
 from app.core.config import Settings
 import logging
+import os
+from pathlib import Path
 
 settings = Settings()
 
+# Create logs directory if it doesn't exist
+log_dir = Path("backend/logs")
+log_dir.mkdir(parents=True, exist_ok=True)
+
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_dir / "app.log"),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Backend API for the Virtual Startup Platform",
-    version="1.0.0"
+    version="1.0.0",
+    redirect_slashes=False  # Disable automatic slash redirection
 )
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Frontend URLs
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "http://192.168.8.120:8080",
+        "http://localhost:8001",  # Adding backend port
+        "http://127.0.0.1:8001"   # Adding backend port
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
@@ -50,8 +72,12 @@ app.include_router(persona_router, prefix="/api/personas", tags=["Personas"])
 
 @app.middleware("http")
 async def log_requests(request, call_next):
+    logger.debug(f"Request: {request.method} {request.url}")
+    logger.debug(f"Request headers: {request.headers}")
+    logger.debug(f"Request cookies: {request.cookies}")
     try:
         response = await call_next(request)
+        logger.debug(f"Response status: {response.status_code}")
         return response
     except Exception as e:
         logger.exception("Error processing request")

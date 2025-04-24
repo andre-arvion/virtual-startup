@@ -1,73 +1,205 @@
-# Welcome to your Lovable project
+# Virtual Startup Platform Frontend
 
-## Project info
+The frontend application for the Virtual Startup Platform, built with React, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/d91e44f3-bbcd-4665-be0a-c4efc050c25c
+## Features
 
-## How can I edit this code?
+### User Interface
+- Modern, responsive design
+- Dark/light theme support
+- Intuitive navigation
+- Real-time updates
 
-There are several ways of editing your application.
+### Project Management
+- Project dashboard
+- Project creation and editing
+- Project phases visualization
+- Persona management interface
+- Asset management system
 
-**Use Lovable**
+### Task Management
+- Task board with drag-and-drop
+- Task creation and assignment
+- Priority and status management
+- Due date tracking
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d91e44f3-bbcd-4665-be0a-c4efc050c25c) and start prompting.
+### Activity Tracking
+- Real-time activity feed
+- Project-specific activity logs
+- User activity history
 
-Changes made via Lovable will be committed automatically to this repo.
+### Search and Navigation
+- Global search functionality
+- Advanced filtering options
+- Quick navigation shortcuts
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **React 18** - UI Framework
+- **TypeScript** - Type Safety
+- **Tailwind CSS** - Styling
+- **React Router** - Navigation
+- **Zustand** - State Management
+- **Axios** - API Client
+- **React Query** - Data Fetching
+- **Shadcn/ui** - UI Components
+- **React Hook Form** - Form Management
+- **Zod** - Schema Validation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Project Structure
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+frontend/
+├── public/              # Static assets
+├── src/
+│   ├── components/     # Reusable components
+│   │   ├── auth/      # Authentication components
+│   │   ├── layout/    # Layout components
+│   │   ├── project/   # Project-related components
+│   │   └── ui/        # UI components
+│   ├── hooks/         # Custom hooks
+│   ├── lib/           # Utilities and helpers
+│   ├── pages/         # Page components
+│   ├── store/         # State management
+│   ├── styles/        # Global styles
+│   └── types/         # TypeScript types
+└── tests/             # Test files
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Prerequisites
 
-**Use GitHub Codespaces**
+- Node.js 16+
+- npm or yarn
+- Backend API running (see main README)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Installation
 
-## What technologies are used for this project?
+1. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-This project is built with:
+2. Create environment file:
+```bash
+cp .env.example .env
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. Update environment variables:
+```env
+VITE_API_URL=http://localhost:8001
+```
 
-## How can I deploy this project?
+4. Start development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-Simply open [Lovable](https://lovable.dev/projects/d91e44f3-bbcd-4665-be0a-c4efc050c25c) and click on Share -> Publish.
+The application will be available at `http://localhost:8080`
 
-## Can I connect a custom domain to my Lovable project?
+## Available Scripts
 
-Yes, you can!
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm test` - Run tests
+- `npm run typecheck` - Run TypeScript type checking
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Development Guidelines
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Component Structure
+
+```typescript
+// Example component structure
+import { useState } from 'react'
+import { useStore } from '@/store'
+import { Button } from '@/components/ui'
+
+interface Props {
+  // Component props
+}
+
+export function ComponentName({ ...props }: Props) {
+  // Component logic
+  return (
+    // JSX
+  )
+}
+```
+
+### State Management
+
+- Use Zustand for global state
+- Use React Query for server state
+- Use local state for component-specific state
+
+### Styling
+
+- Use Tailwind CSS for styling
+- Follow the design system
+- Use CSS modules for complex components
+
+### Best Practices
+
+- Write clean, maintainable code
+- Add proper TypeScript types
+- Write unit tests for components
+- Follow the established coding style
+- Document complex logic
+- Use proper error handling
+
+## API Integration
+
+The frontend communicates with the backend API using Axios. API calls are organized in the `src/lib/api` directory:
+
+```typescript
+// Example API call
+import { api } from '@/lib/api'
+
+export const getProjects = async () => {
+  const response = await api.get('/api/projects')
+  return response.data
+}
+```
+
+## Contributing
+
+1. Follow the project's coding style
+2. Write clear commit messages
+3. Add tests for new features
+4. Update documentation as needed
+5. Create pull requests for review
+
+## Troubleshooting
+
+### Common Issues
+
+1. **API Connection Issues**
+   - Check if the backend is running
+   - Verify API URL in .env file
+   - Check CORS settings
+
+2. **Build Issues**
+   - Clear node_modules and reinstall
+   - Check TypeScript errors
+   - Verify dependencies
+
+3. **State Management Issues**
+   - Check Redux DevTools
+   - Verify store updates
+   - Check component re-renders
+
+## Additional Resources
+
+- [React Documentation](https://react.dev)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Zustand Documentation](https://github.com/pmndrs/zustand)
+- [React Query Documentation](https://tanstack.com/query/latest)

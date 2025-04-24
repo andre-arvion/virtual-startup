@@ -1,8 +1,8 @@
-"""initial_with_activities
+"""add status to project
 
-Revision ID: 1ad7e8c737b2
+Revision ID: 01e3ae63706b
 Revises: 
-Create Date: 2024-03-24 12:00:00.000000
+Create Date: 2024-03-26 20:30:00.000000
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import sqlite
 
 # revision identifiers, used by Alembic.
-revision = '1ad7e8c737b2'
+revision = '01e3ae63706b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,8 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('title', sa.String(), nullable=False),
         sa.Column('description', sa.String(), nullable=True),
+        sa.Column('type', sa.String(), nullable=True),
+        sa.Column('status', sa.String(), nullable=True),
         sa.Column('phases', sa.JSON(), nullable=True),
         sa.Column('personas', sa.JSON(), nullable=True),
         sa.Column('assets', sa.JSON(), nullable=True),
@@ -51,15 +53,11 @@ def upgrade() -> None:
         sa.Column('description', sa.String(), nullable=True),
         sa.Column('status', sa.String(), nullable=True),
         sa.Column('priority', sa.String(), nullable=True),
-        sa.Column('phase', sa.String(), nullable=False),
-        sa.Column('completed', sa.Boolean(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
         sa.Column('project_id', sa.Integer(), nullable=False),
-        sa.Column('assignee_id', sa.Integer(), nullable=True),
-        sa.Column('creator_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['assignee_id'], ['users.id'], ),
-        sa.ForeignKeyConstraint(['creator_id'], ['users.id'], ),
+        sa.Column('owner_id', sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
         sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
@@ -69,13 +67,11 @@ def upgrade() -> None:
     op.create_table('activities',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('type', sa.String(), nullable=False),
-        sa.Column('description', sa.String(), nullable=False),
+        sa.Column('description', sa.String(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
+        sa.Column('project_id', sa.Integer(), nullable=False),
         sa.Column('user_id', sa.Integer(), nullable=False),
-        sa.Column('project_id', sa.Integer(), nullable=True),
-        sa.Column('task_id', sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
-        sa.ForeignKeyConstraint(['task_id'], ['tasks.id'], ),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
@@ -84,7 +80,8 @@ def upgrade() -> None:
     # Create persona_responses table
     op.create_table('persona_responses',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('content', sa.String(), nullable=False),
+        sa.Column('persona_id', sa.String(), nullable=False),
+        sa.Column('response', sa.JSON(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('project_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
@@ -94,7 +91,8 @@ def upgrade() -> None:
     # Create persona_sessions table
     op.create_table('persona_sessions',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('context', sa.JSON(), nullable=True),
+        sa.Column('persona_id', sa.String(), nullable=False),
+        sa.Column('messages', sa.JSON(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('project_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),

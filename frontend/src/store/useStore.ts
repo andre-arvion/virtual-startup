@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Activity, AppSettings, Message, Project, Prompt, WizardStep } from '@/types';
-import projectsData from '@/mock/projects.json';
+import { auth, projects } from '@/lib/api';
 import projectMetaData from '@/mock/project_meta.json';
 import activitiesData from '@/mock/activity_log.json';
 import personaResponsesData from '@/mock/persona_responses.json';
 import { readFileSync } from 'fs';
+import axios from 'axios';
 
 // Types for our store
 interface State {
@@ -42,7 +43,7 @@ interface State {
   
   // Actions
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   
   fetchProjects: () => Promise<Project[]>;
   fetchProject: (id: string) => Promise<Project | null>;
@@ -183,7 +184,7 @@ const useStore = create<State>()(
       projects: [],
       currentProject: null,
       activities: [],
-      currentPersona: 'vpm',
+      currentPersona: '',
       messages: {},
       isTyping: false,
       wizardSteps: initialWizardSteps,
@@ -191,172 +192,134 @@ const useStore = create<State>()(
       wizardData: {},
       prompts: {},
       settings: {
-        model: "openai",
-        theme: "system",
+        model: 'openai',
+        theme: 'system',
         autosave: true,
         user: {
-          name: "Demo User",
-          email: "demo@example.com",
-          role: "Founder"
+          name: '',
+          email: '',
+          role: ''
         },
-        version: "1.0.0"
+        version: '1.0.0'
       },
 
       // Auth actions
-      login: async (email, password) => {
-        await delay(800); // Simulate API call
-        
-        // Mock authentication (accept any email/password)
-        if (email && password) {
-          set({
-            isAuthenticated: true,
-            user: {
-              name: email.split('@')[0],
-              email,
-              role: 'Founder'
-            }
-          });
-
-          // Initialize project data immediately after login
-          const store = get();
-          await store.fetchProjects();
-          
-          // Set the first project as current if none is selected
-          const projects = store.projects;
-          if (projects.length > 0 && !store.currentProject) {
-            await store.setCurrentProject(projects[0].id);
+      login: async (email: string, password: string) => {
+        try {
+          const response = await auth.login(email, password);
+          if (response.access_token) {
+            // Set the authenticated state immediately after successful login
+            set({
+              isAuthenticated: true,
+              user: {
+                name: email.split('@')[0],
+                email,
+                role: 'Founder'
+              }
+            });
+            return true;
           }
-          
-          return true;
+          return false;
+        } catch (error) {
+          console.error('Login error:', error);
+          set({ isAuthenticated: false, user: null });
+          return false;
         }
-        return false;
       },
       
-      logout: () => {
-        set({
-          isAuthenticated: false,
-          user: null
-        });
+      logout: async () => {
+        try {
+          await auth.logout();
+        } catch (error) {
+          console.error('Logout error:', error);
+        } finally {
+          set({
+            isAuthenticated: false,
+            user: null,
+            projects: [],
+            currentProject: null,
+            activities: [],
+            messages: {},
+            currentPersona: ''
+          });
+        }
       },
 
       // Project actions
       fetchProjects: async () => {
-        await delay(500); // Simulate API call
-        const projects = projectsData.projects as Project[];
-        set({ projects });
-        return projects;
+        try {
+          const response = await projects.list();
+          set({ projects: response });
+          return response;
+        } catch (error) {
+          console.error('Error fetching projects:', error);
+          if (axios.isAxiosError(error) && error.response?.status === 401) {
+            await get().logout();
+          }
+          return [];
+        }
       },
       
       fetchProject: async (id) => {
-        await delay(300); // Simulate API call
-        
-        if (id === projectMetaData.id) {
-          set({ currentProject: projectMetaData as unknown as Project });
-          return projectMetaData as unknown as Project;
-        }
-        
-        const project = projectsData.projects.find(p => p.id === id) as Project | undefined;
-        if (project) {
-          set({ currentProject: project });
+        try {
+          const project = await projects.get(Number(id));
+          set(state => {
+            // Set the initial persona to the first one in the list if none is selected
+            const currentPersona = state.currentPersona || project?.personas?.[0]?.id || '';
+            return {
+              currentProject: project,
+              currentPersona
+            };
+          });
           return project;
+        } catch (error) {
+          console.error('Error fetching project:', error);
+          return null;
         }
-        return null;
       },
       
       createProject: async (projectData) => {
-        await delay(800); // Simulate API call
-        const newProject: Project = {
-          id: `proj-${Date.now().toString(36)}`,
-          ...projectData,
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString(),
-          phases: {
-            frontend: 0,
-            backend: 0,
-            integration: 0
-          },
-          personas: [
-            {
-              id: "vpm",
-              name: "vPM",
-              fullName: "Virtual Product Manager",
-              completed: false,
-              icon: "layout-dashboard"
-            },
-            {
-              id: "vux",
-              name: "vUX",
-              fullName: "Virtual UX Designer",
-              completed: false,
-              icon: "image"
-            },
-            {
-              id: "vcto",
-              name: "vCTO",
-              fullName: "Virtual CTO",
-              completed: false,
-              icon: "code"
-            },
-            {
-              id: "vciso",
-              name: "vCISO",
-              fullName: "Virtual CISO",
-              completed: false,
-              icon: "shield"
-            },
-            {
-              id: "vtechwriter",
-              name: "vTech Writer",
-              fullName: "Virtual Tech Writer",
-              completed: false,
-              icon: "file-text"
-            }
-          ],
-          assets: []
-        };
-        
-        set(state => ({
-          projects: [...state.projects, newProject],
-          currentProject: newProject // Set as current project
-        }));
-        
+        const newProject = await projects.create(projectData);
+        set(state => {
+          // Set the initial persona to the first one in the list if available
+          const initialPersona = newProject.personas?.[0]?.id || '';
+          return {
+            projects: [...state.projects, newProject],
+            currentProject: newProject,
+            currentPersona: initialPersona
+          };
+        });
         return newProject;
       },
       
       updateProject: async (id, updates) => {
-        await delay(500); // Simulate API call
-        const { projects } = get();
-        const index = projects.findIndex(p => p.id === id);
-        
-        if (index === -1) return null;
-        
-        const updatedProject = {
-          ...projects[index],
-          ...updates,
-          updated_date: new Date().toISOString()
-        };
-        
-        const updatedProjects = [...projects];
-        updatedProjects[index] = updatedProject;
-        
-        set({
-          projects: updatedProjects,
-          currentProject: id === get().currentProject?.id ? updatedProject : get().currentProject
-        });
-        
-        return updatedProject;
+        try {
+          const updatedProject = await projects.update(Number(id), updates);
+          set(state => ({
+            projects: state.projects.map(p => 
+              p.id === Number(id) ? updatedProject : p
+            ),
+            currentProject: state.currentProject?.id === Number(id) ? updatedProject : state.currentProject
+          }));
+          return updatedProject;
+        } catch (error) {
+          console.error('Error updating project:', error);
+          return null;
+        }
       },
       
       deleteProject: async (id) => {
-        await delay(500); // Simulate API call
-        const { projects, currentProject } = get();
-        
-        set({
-          projects: projects.filter(p => p.id !== id),
-          currentProject: currentProject?.id === id ? null : currentProject
-        });
-        
-        return true;
+        try {
+          await projects.delete(Number(id));
+          set(state => ({
+            projects: state.projects.filter(p => p.id !== Number(id)),
+            currentProject: state.currentProject?.id === Number(id) ? null : state.currentProject
+          }));
+          return true;
+        } catch (error) {
+          console.error('Error deleting project:', error);
+          return false;
+        }
       },
       
       setCurrentProject: async (id) => {

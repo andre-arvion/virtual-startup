@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { MessageSquare, Send } from "lucide-react";
@@ -10,6 +9,7 @@ import { Message } from "@/types";
 import useStore from "@/store/useStore";
 import ReactMarkdown from "react-markdown";
 import { IconSelector } from "@/components/chat/IconSelector";
+import { getPersonaName } from '@/utils/persona';
 
 export function ChatPage() {
   const [message, setMessage] = useState("");
@@ -32,11 +32,18 @@ export function ChatPage() {
   useEffect(() => {
     if (currentProject && currentPersona) {
       setLoading(true);
-      fetchMessages(currentProject.id, currentPersona).finally(() => {
+      fetchMessages(String(currentProject.id), currentPersona).finally(() => {
         setLoading(false);
       });
     }
   }, [currentProject, currentPersona, fetchMessages]);
+
+  // Add effect to set initial persona
+  useEffect(() => {
+    if (currentProject?.personas?.length && !currentPersona) {
+      setCurrentPersona(currentProject.personas[0].id);
+    }
+  }, [currentProject, currentPersona, setCurrentPersona]);
 
   useEffect(() => {
     scrollToBottom();
@@ -51,7 +58,7 @@ export function ChatPage() {
     
     if (!message.trim() || !currentProject) return;
     
-    sendMessage(currentProject.id, currentPersona, message);
+    sendMessage(String(currentProject.id), currentPersona, message);
     setMessage("");
     
     // Focus the input after sending
@@ -71,10 +78,9 @@ export function ChatPage() {
     <Layout>
       <div className="flex flex-col h-[calc(100vh-4rem)]">
         <div className="flex items-center justify-between pb-4">
-          <h1 className="text-2xl font-bold">Chat with AI Persona</h1>
+          <h1 className="text-2xl font-bold">{getPersonaName(currentPersona)}</h1>
           <IconSelector 
             currentPersona={currentPersona} 
-            personas={currentProject?.personas || []} 
             onChange={setCurrentPersona}
           />
         </div>
@@ -90,7 +96,7 @@ export function ChatPage() {
               <MessageSquare className="h-12 w-12 mb-4 opacity-50" />
               <h3 className="font-medium text-lg">No messages yet</h3>
               <p className="max-w-sm">
-                Start a conversation with {getPersonaName(currentPersona, currentProject?.personas)} to receive guidance on your project.
+                Start a conversation with {getPersonaName(currentPersona)} to receive guidance on your project.
               </p>
             </div>
           ) : (
@@ -153,7 +159,7 @@ export function ChatPage() {
           <div className="flex gap-2">
             <Textarea
               ref={inputRef}
-              placeholder={`Message ${getPersonaName(currentPersona, currentProject?.personas)}...`}
+              placeholder={`Message ${getPersonaName(currentPersona)}...`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -168,10 +174,4 @@ export function ChatPage() {
       </div>
     </Layout>
   );
-}
-
-function getPersonaName(personaId: string, personas?: Array<{ id: string; fullName: string }>) {
-  if (!personas) return personaId;
-  const persona = personas.find((p) => p.id === personaId);
-  return persona?.fullName || personaId;
 }

@@ -16,5 +16,4 @@ class User(Base):
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")
     assigned_tasks = relationship("Task", foreign_keys="Task.assignee_id", back_populates="assignee")
     created_tasks = relationship("Task", foreign_keys="Task.creator_id", back_populates="creator")
-    activities = relationship("Activity", back_populates="user")
-    project_templates = relationship("ProjectTemplate", back_populates="owner", cascade="all, delete-orphan") 
+    activities = relationship("Activity", back_populates="user") 

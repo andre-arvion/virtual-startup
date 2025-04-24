@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -9,14 +8,57 @@ import {
 import { ChevronDown } from "lucide-react"
 import { Persona } from "@/types"
 
+// Hardcoded personas
+const DEFAULT_PERSONAS: Persona[] = [
+  {
+    id: "vpm",
+    name: "vPM",
+    fullName: "Virtual Product Manager",
+    progress: 0,
+    status: "not_started",
+    icon: "layout-dashboard"
+  },
+  {
+    id: "vux",
+    name: "vUX",
+    fullName: "Virtual UX Designer",
+    progress: 0,
+    status: "not_started",
+    icon: "image"
+  },
+  {
+    id: "vcto",
+    name: "vCTO",
+    fullName: "Virtual CTO",
+    progress: 0,
+    status: "not_started",
+    icon: "code"
+  },
+  {
+    id: "vciso",
+    name: "vCISO",
+    fullName: "Virtual CISO",
+    progress: 0,
+    status: "not_started",
+    icon: "shield"
+  },
+  {
+    id: "vtechwriter",
+    name: "vTech Writer",
+    fullName: "Virtual Tech Writer",
+    progress: 0,
+    status: "not_started",
+    icon: "file-text"
+  }
+];
+
 interface IconSelectorProps {
   currentPersona: string
-  personas: Persona[]
   onChange: (persona: string) => void
 }
 
-export function IconSelector({ currentPersona, personas, onChange }: IconSelectorProps) {
-  const currentPersonaData = personas.find((p) => p.id === currentPersona)
+export function IconSelector({ currentPersona, onChange }: IconSelectorProps) {
+  const currentPersonaData = DEFAULT_PERSONAS.find((p) => p.id === currentPersona)
 
   return (
     <DropdownMenu>
@@ -27,7 +69,7 @@ export function IconSelector({ currentPersona, personas, onChange }: IconSelecto
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[200px]">
-        {personas.map((persona) => (
+        {DEFAULT_PERSONAS.map((persona) => (
           <DropdownMenuItem
             key={persona.id}
             onClick={() => onChange(persona.id)}

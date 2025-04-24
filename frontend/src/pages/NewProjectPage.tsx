@@ -8,20 +8,22 @@ import { useState } from "react";
 import useStore from "@/store/useStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import { ProjectCreate } from "@/types";
 
 export function NewProjectPage() {
   const navigate = useNavigate();
   const { createProject } = useStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
+  const [formData, setFormData] = useState<ProjectCreate>({
+    title: "",
     description: "",
-    type: "SaaS"
+    type: "SaaS",
+    status: "Planning"
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.description.trim()) {
+    if (!formData.title.trim() || !formData.description.trim()) {
       toast({
         title: "Validation Error",
         description: "Please fill in all required fields.",
@@ -33,15 +35,7 @@ export function NewProjectPage() {
     setIsLoading(true);
     
     try {
-      const project = await createProject({
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        type: formData.type,
-        status: "Planning",
-        phases: {},
-        personas: [],
-        assets: []
-      });
+      const project = await createProject(formData);
       
       toast({
         title: "Project created",
@@ -78,14 +72,14 @@ export function NewProjectPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="name">
-                  Project Name
+                <label className="text-sm font-medium" htmlFor="title">
+                  Project Title
                 </label>
                 <Input
-                  id="name"
-                  placeholder="Enter project name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  id="title"
+                  placeholder="Enter project title"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
                 />
               </div>

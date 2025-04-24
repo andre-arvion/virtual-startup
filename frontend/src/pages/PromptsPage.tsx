@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +11,7 @@ import { AlertCircle, Check, Copy, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getPersonaName } from '@/utils/persona';
 
 export function PromptsPage() {
   const [activePersona, setActivePersona] = useState<string>("vpm");
@@ -229,7 +229,4 @@ export function PromptsPage() {
   );
 }
 
-function getPersonaName(personaId: string, personas: Array<{ id: string; fullName: string }>) {
-  const persona = personas.find((p) => p.id === personaId);
-  return persona?.fullName || personaId;
-}
+export default PromptsPage;

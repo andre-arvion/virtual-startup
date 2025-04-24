@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ export function LoginPage() {
   const [error, setError] = useState("");
   const login = useStore((state) => state.login);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,12 +24,15 @@ export function LoginPage() {
     try {
       const success = await login(email, password);
       if (success) {
-        navigate("/");
+        // Get the intended destination from location state, or default to projects
+        const from = location.state?.from?.pathname || "/projects";
+        navigate(from, { replace: true });
       } else {
         setError("Invalid email or password");
       }
     } catch (err) {
       setError("An error occurred during login");
+      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +60,7 @@ export function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                   />
                 </div>
                 <div className="space-y-2">
@@ -67,6 +71,7 @@ export function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="current-password"
                   />
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}

@@ -7,13 +7,14 @@ import { MarkdownPage } from "@/pages/MarkdownPage";
 import { PromptsPage } from "@/pages/PromptsPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { NewProjectPage } from "@/pages/NewProjectPage";
+import { ProjectsPage } from "@/pages/ProjectsPage";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import useStore from "@/store/useStore";
 import { useEffect } from "react";
 
 function App() {
-  const { settings, currentProject, setCurrentProject } = useStore();
+  const { settings } = useStore();
 
   // Set theme based on user settings
   useEffect(() => {
@@ -27,19 +28,14 @@ function App() {
     }
   }, [settings.theme]);
 
-  // Initialize with the default project
-  useEffect(() => {
-    if (!currentProject) {
-      setCurrentProject("proj-123456");
-    }
-  }, [currentProject, setCurrentProject]);
-
   return (
     <div className="min-h-screen bg-background">
       <ThemeProvider defaultTheme={settings.theme || "light"} storageKey="vsp-theme">
         <Router>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/new-project" element={<NewProjectPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/wizard" element={<WizardPage />} />
@@ -47,8 +43,7 @@ function App() {
             <Route path="/docs" element={<Navigate to="/documentation" replace />} />
             <Route path="/prompts" element={<PromptsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/new-project" element={<NewProjectPage />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/projects" replace />} />
           </Routes>
           <Toaster />
         </Router>

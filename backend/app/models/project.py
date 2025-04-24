@@ -10,6 +10,8 @@ class Project(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(String)
+    type = Column(String)  # Adding type field
+    status = Column(String)  # Adding status field
     phases = Column(JSON, default=dict)  # {"frontend": 0, "backend": 0, "integration": 0}
     personas = Column(JSON, default=list)  # List of completed personas
     assets = Column(JSON, default=list)  # List of project assets/links

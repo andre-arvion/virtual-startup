@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import useStore from "@/store/useStore";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { UserNav } from "./UserNav";
 import { ThemeToggle } from "../theme/ThemeToggle";
@@ -10,19 +10,24 @@ interface LayoutProps {
   children: ReactNode;
   requiresAuth?: boolean;
   className?: string;
+  pageTitle?: string;
 }
 
-export function Layout({ children, requiresAuth = true, className }: LayoutProps) {
+export function Layout({ children, requiresAuth = true, className, pageTitle }: LayoutProps) {
   const { isAuthenticated, fetchProjects } = useStore();
+  const location = useLocation();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchProjects();
+    if (isAuthenticated && requiresAuth) {
+      fetchProjects().catch(() => {
+        // If fetching projects fails, it might be due to an expired token
+        // The 401 interceptor will handle the logout
+      });
     }
-  }, [isAuthenticated, fetchProjects]);
+  }, [isAuthenticated, fetchProjects, requiresAuth]);
 
   if (requiresAuth && !isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (!requiresAuth && isAuthenticated) {
