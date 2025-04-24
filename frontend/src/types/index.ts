@@ -1,14 +1,39 @@
-export interface Project {
-  id: string;
-  name: string;
+export interface ProjectBase {
+  title: string;
   description: string;
   type: string;
   status: "Planning" | "In Progress" | "Completed";
-  created_date: string;
-  updated_date: string;
-  phases?: Phase[];
-  personas?: Persona[];
-  assets?: Asset[];
+}
+
+export interface ProjectCreate extends ProjectBase {}
+
+export interface Project extends ProjectBase {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  owner_id: number;
+  phases: {
+    frontend: number;
+    backend: number;
+    integration: number;
+  };
+  personas: Array<{
+    id: string;
+    name: string;
+    fullName: string;
+    progress: number;
+    status: "not_started" | "in_progress" | "completed";
+    icon: string;
+  }>;
+  assets: Array<{
+    id: string;
+    name: string;
+    url: string;
+    type: string;
+    description?: string;
+    lastUpdated?: string;
+    icon: string;
+  }>;
 }
 
 export interface Phase {
@@ -25,9 +50,35 @@ export interface Persona {
   id: string;
   name: string;
   fullName: string;
-  progress: number;
   status: 'not_started' | 'in_progress' | 'completed';
+  progress: number;
   icon: string;
+  completedSteps?: string[];
+}
+
+export interface PersonaResponse {
+  id: number;
+  projectId: number;
+  prompt: string;
+  response: string;
+  context: Record<string, any>;
+  createdAt: string;
+}
+
+export interface PersonaSession {
+  id: number;
+  projectId: number;
+  stepsCompleted: string[];
+  currentStep: string;
+  memory: Record<string, any>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PersonaStepStatus {
+  step: string;
+  status: 'completed' | 'in_progress' | 'pending';
+  completedAt?: string;
 }
 
 export interface Asset {

@@ -7,7 +7,9 @@ from app.schemas.project import Project, ProjectCreate, ProjectUpdate, ProjectPh
 from app.core.auth import get_current_user
 from app.models.user import User
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Projects"]
+)
 
 @router.post("/", response_model=Project, status_code=status.HTTP_201_CREATED)
 def create_project(

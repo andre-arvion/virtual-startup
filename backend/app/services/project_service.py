@@ -6,11 +6,55 @@ from typing import List, Optional
 class ProjectService:
     @staticmethod
     def create_project(db: Session, project: ProjectCreate, owner_id: int) -> Project:
+        # Default personas with their initial state
+        default_personas = [
+            {
+                "id": "vpm",
+                "name": "vPM",
+                "fullName": "Virtual Product Manager",
+                "progress": 0,
+                "status": "not_started",
+                "icon": "layout-dashboard"
+            },
+            {
+                "id": "vux",
+                "name": "vUX",
+                "fullName": "Virtual UX Designer",
+                "progress": 0,
+                "status": "not_started",
+                "icon": "image"
+            },
+            {
+                "id": "vcto",
+                "name": "vCTO",
+                "fullName": "Virtual CTO",
+                "progress": 0,
+                "status": "not_started",
+                "icon": "code"
+            },
+            {
+                "id": "vciso",
+                "name": "vCISO",
+                "fullName": "Virtual CISO",
+                "progress": 0,
+                "status": "not_started",
+                "icon": "shield"
+            },
+            {
+                "id": "vtechwriter",
+                "name": "vTech Writer",
+                "fullName": "Virtual Tech Writer",
+                "progress": 0,
+                "status": "not_started",
+                "icon": "file-text"
+            }
+        ]
+
         db_project = Project(
             **project.model_dump(),
             owner_id=owner_id,
             phases={"frontend": 0, "backend": 0, "integration": 0},
-            personas=[],
+            personas=default_personas,
             assets=[]
         )
         db.add(db_project)

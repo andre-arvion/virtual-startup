@@ -153,7 +153,7 @@ Cursor and other AI tools MUST follow the order and constraints exactly.
 - Project structure
 - Create base API `/api/*`
 - Add CORS, logging, `.env`, Dockerfile  
- `# pending`
+ `# done`
 
 ---
 
@@ -165,9 +165,7 @@ CRUD for:
 - Get Single Project
 - Update Project
 - Delete Project
-
-✅ Integrate with UI (step 7)  
- `# pending`
+ `# done`
 
 ---
 
@@ -179,7 +177,7 @@ CRUD for:
 - Export full ZIP bundle
 
 ✅ Connect to markdown viewer + export UI  
- `# pending`
+ `# done`
 
 ---
 
@@ -191,28 +189,45 @@ CRUD for:
 - GET session memory
 - GET status of previous steps
 
-✅ Replace mock in chat + wizard  
- `# pending`
 
 ---
 
 ### 15. Dashboard Data API
 
-- Get current `project_meta` object
-- Get activity log entries
-- Track persona progress
-- Calculate task % complete
+- Get current `project_meta` object ✅ `# done`
+  - Project model includes phases, personas, and assets
+  - ProjectService has methods to update these
+- Get activity log entries ✅ `# done`
+  - ActivityService implemented with create and get methods
+- Track persona progress ✅ `# done`
+  - PersonaService tracks session and step status
+  - Project model tracks completed personas
+- Calculate task % complete ✅ `# done`
+  - Task model and service implemented
+  - Project task stats endpoint added
+  - Full CRUD operations for tasks
 
 ✅ Replaces all dashboard mock data  
- `# pending`
+`# done`
 
 ---
 
 ### 16. Prompt Management API
 
-- GET current prompt
-- POST new prompt (admin only)
-- GET all persona prompts
+- GET current prompt ✅ `# done`
+  - Get default prompt by persona
+  - Get all prompts for persona
+- POST new prompt (admin only) ✅ `# done`
+  - Create new prompts
+  - Update existing prompts
+  - Set default prompts
+- GET all persona prompts ✅ `# done`
+  - List all prompts
+  - Filter by persona
+
+✅ Replace mock in chat + wizard  
+ `# pending`
+
 
 ✅ Integrate with admin prompt editor  
  `# pending`
@@ -225,7 +240,12 @@ CRUD for:
 - Return session token
 
 ✅ Wire to login UI  
+ `# done`
+
+
+✅ Integrate with UI (step 7)  
  `# pending`
+
 
 ---
 
